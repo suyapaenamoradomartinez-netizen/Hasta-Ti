@@ -13,17 +13,12 @@ const completed = {
     puzzle: false
 };
 
-/* =====================
-   PETALOS
-===================== */
-
 function createPetal() {
     if (!petalContainer) return;
 
     const petal = document.createElement("div");
     petal.classList.add("petal");
 
-    
     const size = Math.random() * 8 + 8; 
     petal.style.width = `${size}px`;
     petal.style.height = `${size * 1.3}px`;
@@ -40,104 +35,89 @@ function createPetal() {
 
 setInterval(createPetal, 400);
 
-/* =====================
-   MUSICA
-===================== */
-
 let musicEnabled = false;
 
-musicToggle.addEventListener("click", () => {
-
-    if (!musicEnabled) {
-
-    music.play().catch(error => {
-        console.log(error);
+if (musicToggle) {
+    musicToggle.addEventListener("click", () => {
+        if (!musicEnabled) {
+            music.play().catch(error => {
+                console.log(error);
+            });
+            musicEnabled = true;
+            musicToggle.textContent = "🔇 Pausar";
+        } else {
+            music.pause();
+            musicEnabled = false;
+            musicToggle.textContent = "🔊 Música";
+        }
     });
+}
 
-    musicEnabled = true;
+function showStarModal(textoMensaje, alCerrar) {
+    const modal = document.getElementById("starModal");
+    const msg = document.getElementById("modalMessage");
+    const btn = document.getElementById("modalCloseBtn");
 
-    musicToggle.textContent =
-    "🔇 Pausar";
+    if (!modal) return;
 
-}else{
+    msg.innerHTML = textoMensaje;
+    modal.classList.remove("hidden");
 
-    music.pause();
+    const cerrar = () => {
+        modal.classList.add("hidden");
+        btn.removeEventListener("click", cerrar);
+        if (alCerrar) alCerrar();
+    };
 
-    musicEnabled = false;
+    btn.addEventListener("click", cerrar);
+}
 
-        musicToggle.textContent =
-        "🔊 Música";
-    }
-
-});
-   
-/* =====================
-   INTRO
-===================== */
-
-const introQuestion =
-    document.getElementById("introQuestion");
-
-const yesBtn =
-    document.getElementById("yesBtn");
-
-const noBtn =
-    document.getElementById("noBtn");
+const introQuestion = document.getElementById("introQuestion");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
 
 const noMessages = [
-
     "¿Seguroooo? 🥺",
     "¿De verdad? 🌸",
     "¿Completamente seguro? ☕",
     "¿Segurísimo? 💖",
     "Creo que deberías pensarlo otra vez 🌷"
-
 ];
 
 let noScale = 1;
 let noIndex = 0;
 
-noBtn.addEventListener("click", () => {
+if (noBtn) {
+    noBtn.addEventListener("click", () => {
+        if (noIndex < noMessages.length) {
+            introQuestion.textContent = noMessages[noIndex];
+            noIndex++;
+        }
 
-    if (noIndex < noMessages.length) {
+        noScale *= 0.55;
+        noBtn.style.transform = `scale(${noScale})`;
 
-        introQuestion.textContent =
-            noMessages[noIndex];
+        if (noScale < 0.08) {
+            noBtn.style.display = "none";
+        }
+    });
+}
 
-        noIndex++;
-    }
+if (yesBtn) {
+    yesBtn.addEventListener("click", () => {
+        if (!musicEnabled && music) {
+            music.play().catch(() => {});
+            musicEnabled = true;
+        }
+        showHub();
+    });
+}
 
-    noScale *= 0.55;
+function showHub() {
+    const template = document.getElementById("hubTemplate");
+    if (!template) return;
 
-    noBtn.style.transform =
-        `scale(${noScale})`;
-
-    if (noScale < 0.08) {
-
-        noBtn.style.display =
-            "none";
-    }
-});
-
-yesBtn.addEventListener("click", () => {
-
-    if (!musicEnabled) {
-
-        music.play();
-        musicEnabled = true;
-    }
-
-    showHub();
-
-});
- 
-function showHub(){
-
-    const template =
-    document.getElementById("hubTemplate");
-
-    app.innerHTML =
-    template.innerHTML;
+    app.innerHTML = template.innerHTML;
 
     updateStars();
 
@@ -147,361 +127,188 @@ function showHub(){
     document.getElementById("starBtn").onclick = startStarGame;
     document.getElementById("puzzleBtn").onclick = startPuzzle;
 }
-   
 
-/* =====================
-   ESTRELLAS
-===================== */
+function updateStars() {
+    for (let i = 1; i <= 5; i++) {
+        const star = document.getElementById(`star${i}`);
+        if (!star) continue;
 
- function updateStars(){
-
-    for(let i = 1; i <= 5; i++){
-
-        const star =
-        document.getElementById(
-            `star${i}`
-        );
-
-        if(!star){
-            continue;
+        if (i <= stars) {
+            star.textContent = "⭐";
+        } else {
+            star.textContent = "☆";
         }
-
-        if(i <= stars){
-
-            star.textContent =
-            "⭐";
-
-        }else{
-
-            star.textContent =
-            "☆";
-
-        }
-
     }
 }
 
-function addStar(){
-
+function addStar() {
     stars++;
-    
-    console.log("ESTRELLAS:", stars);
-
-    if(stars > 5){
-        stars = 5;
-    }
+    if (stars > 5) stars = 5;
 
     updateStars();
 
-if(stars >= 5){
-
+    if (stars >= 5) {
         setTimeout(() => {
-
             showFinal();
-
-        },1000);
-
+        }, 1000);
     }
-
- }
-
- 
-/* =====================
-   MEMORIA
-===================== */
+}
 
 function startMemory() {
+    const template = document.getElementById("memoryTemplate");
+    app.innerHTML = template.innerHTML;
 
-    const template =
-        document.getElementById(
-            "memoryTemplate"
-        );
+    document.getElementById("memoryBack").onclick = showHub;
 
-    app.innerHTML =
-        template.innerHTML;
-
-    document
-        .getElementById("memoryBack")
-        .onclick = showHub;
-
-    const board =
-        document.getElementById(
-            "memoryBoard"
-        );
-
-    const message =
-        document.getElementById(
-            "memoryMessage"
-        );
+    const board = document.getElementById("memoryBoard");
+    const message = document.getElementById("memoryMessage");
 
     const cards = [
-
-        "🍰","🍰",
-        "🦐","🦐",
-        "🐢","🐢",
-        "👓","👓",
-        "🍓","🍓",
-        "🍌","🍌"
-
+        "🍰", "🍰",
+        "🦐", "🦐",
+        "🐢", "🐢",
+        "👓", "👓",
+        "🍓", "🍓",
+        "🍌", "🍌"
     ];
 
-    cards.sort(() =>
-        Math.random() - 0.5
-    );
+    cards.sort(() => Math.random() - 0.5);
 
     let opened = [];
     let matches = 0;
 
     const phrases = {
-
-        "🍰":
-        "<strong>Pastelito</strong><br>Mi pastelito, siempre tan dulce.",
-
-        "🦐":
-        "<strong>Camarón</strong><br>Mi primer apodo, y todavía mi favorito.",
-
-        "🐢":
-        "<strong>Tortuga</strong><br>Mi tortuguita, siempre tan bonita siendo tú.",
-
-        "👓":
-        "<strong>Lentes</strong><br>Dos pares de lentes, un mismo lugar donde mirar.",
-
-        "🍓":
-        "<strong>Fresa</strong><br>Mi fruta favorita, igual que tú eres de mis personas favoritas.",
-
-        "🍌":
-        "<strong>Banana</strong><br>Para mi Juanobanano. Sí, tenía que estar."
-
+        "🍰": "<strong>Pastelito</strong><br>Mi pastelito, siempre tan dulce.",
+        "🦐": "<strong>Camarón</strong><br>Mi primer apodo, y todavía mi favorito.",
+        "🐢": "<strong>Tortuga</strong><br>Mi tortuguita, siempre tan bonita siendo tú.",
+        "👓": "<strong>Lentes</strong><br>Dos pares de lentes, un mismo lugar donde mirar.",
+        "🍓": "<strong>Fresa</strong><br>Mi fruta favorita, igual que tú eres de mis personas favoritas.",
+        "🍌": "<strong>Banana</strong><br>Para mi Juanobanano. Sí, tenía que estar."
     };
 
     cards.forEach(icon => {
-
-        const card =
-            document.createElement("div");
-
-        card.className =
-            "memory-card";
-
+        const card = document.createElement("div");
+        card.className = "memory-card";
         card.textContent = "❔";
+        card.dataset.icon = icon;
 
-        card.dataset.icon =
-            icon;
+        card.addEventListener("click", () => {
+            if (opened.includes(card) || card.classList.contains("matched")) return;
 
-        card.addEventListener(
-            "click",
-            () => {
+            card.textContent = icon;
+            opened.push(card);
 
-                if (
-                    opened.includes(card)
-                ) return;
+            if (opened.length === 2) {
+                const first = opened[0];
+                const second = opened[1];
 
-                if (
-                    card.classList.contains("matched")
-                ) return;
+                setTimeout(() => {
+                    if (first.dataset.icon === second.dataset.icon) {
+                        first.classList.add("matched");
+                        second.classList.add("matched");
+                        matches++;
 
-                card.textContent =
-                    icon;
+                        message.innerHTML = phrases[icon];
 
-                opened.push(card);
-
-                if (
-                    opened.length === 2
-                ) {
-
-                    const first =
-                        opened[0];
-
-                    const second =
-                        opened[1];
-
-                    setTimeout(() => {
-
-                        if (
-                            first.dataset.icon ===
-                            second.dataset.icon
-                        ) {
-
-                            first.classList.add(
-                                "matched"
-                            );
-
-                            second.classList.add(
-                                "matched"
-                            );
-
-                            matches++;
-
-                            message.innerHTML =
-                                phrases[icon];
-
-                            if (matches === 6) {
-    showStarModal("¡Completaste el juego de memoria y desbloqueaste la primera estrella! ⭐", () => {
-        showHub();
-    });
-}
-                                if (
-                                    !completed.memory
-                                ) {
-
-                                    completed.memory = true;
-
-                                    addStar();
-                                }
+                        if (matches === 6) {
+                            if (!completed.memory) {
+                                completed.memory = true;
+                                addStar();
                             }
-
-                        } else {
-
-                            first.textContent = "❔";
-                            second.textContent = "❔";
+                            showStarModal("¡Completaste el juego de memoria y desbloqueaste la primera estrella! ⭐", () => {
+                                showHub();
+                            });
                         }
-
-                        opened = [];
-
-                    }, 800);
-                }
-
+                    } else {
+                        first.textContent = "❔";
+                        second.textContent = "❔";
+                    }
+                    opened = [];
+                }, 800);
             }
-        );
+        });
 
         board.appendChild(card);
     });
-}function startCode(){
+}
 
-    const template =
-        document.getElementById("codeTemplate");
+function startCode() {
+    const template = document.getElementById("codeTemplate");
+    app.innerHTML = template.innerHTML;
 
-    app.innerHTML =
-        template.innerHTML;
-
-    document
-        .getElementById("codeBack")
-        .onclick = showHub;
+    document.getElementById("codeBack").onclick = showHub;
 
     let currentCode = "";
+    const display = document.getElementById("codeDisplay");
 
-    const display =
-        document.getElementById("codeDisplay");
-
-    const message =
-        document.getElementById("codeMessage");
-
-    document
-        .querySelectorAll("[data-key]")
-        .forEach(btn => {
-
-            btn.onclick = () => {
-
-                if(currentCode.length >= 8) return;
-
-                currentCode += btn.dataset.key;
-
-                updateDisplay();
-            };
-
-        });
-
-    document
-        .getElementById("clearCode")
-        .onclick = () => {
-
-            currentCode = "";
+    document.querySelectorAll("[data-key]").forEach(btn => {
+        btn.onclick = () => {
+            if (currentCode.length >= 8) return;
+            currentCode += btn.dataset.key;
             updateDisplay();
         };
+    });
 
-   document.getElementById("submitCode").onclick = () => {
+    document.getElementById("clearCode").onclick = () => {
+        currentCode = "";
+        updateDisplay();
+    };
+
+    document.getElementById("submitCode").onclick = () => {
         if (currentCode === "28012025") {
-           
             if (!completed.code) {
                 completed.code = true;
                 addStar();
             }
-          
             showStarModal("¡Código correcto! Esa fecha lo cambió todo. Segunda estrella obtenida ⭐", () => {
                 showHub();
             });
         } else {
-
             document.getElementById("codeMessage").textContent = "Código incorrecto. ¡Piensa en una fecha clave!";
         }
-    }; 
-   
-    function updateDisplay(){
+    };
 
+    function updateDisplay() {
         let txt = currentCode;
-
-        if(txt.length > 2){
-
-            txt =
-            txt.slice(0,2)
-            + " / "
-            + txt.slice(2);
+        if (txt.length > 2) {
+            txt = txt.slice(0, 2) + " / " + txt.slice(2);
         }
-
-        if(txt.length > 7){
-
-            txt =
-            txt.slice(0,7)
-            + " / "
-            + txt.slice(7);
+        if (txt.length > 7) {
+            txt = txt.slice(0, 7) + " / " + txt.slice(7);
         }
-
         display.textContent = txt;
     }
-}function startHearts(){
+}
 
-    const template =
-        document.getElementById("heartsTemplate");
+function startHearts() {
+    const template = document.getElementById("heartsTemplate");
+    app.innerHTML = template.innerHTML;
 
-    app.innerHTML =
-        template.innerHTML;
+    document.getElementById("heartsBack").onclick = showHub;
 
-    document
-        .getElementById("heartsBack")
-        .onclick = showHub;
-
-    const area =
-        document.getElementById("heartGameArea");
-
-    const scoreText =
-        document.getElementById("heartScore");
-
-    const timerText =
-        document.getElementById("heartTimer");
+    const area = document.getElementById("heartGameArea");
+    const scoreText = document.getElementById("heartScore");
+    const timerText = document.getElementById("heartTimer");
 
     let score = 0;
     let time = 30;
 
-    const basket =
-        document.createElement("div");
-
+    const basket = document.createElement("div");
     basket.id = "basket";
     basket.innerHTML = "🧺";
-
     area.appendChild(basket);
 
-    area.addEventListener("mousemove",(e)=>{
-
-        const rect =
-            area.getBoundingClientRect();
-
-        basket.style.left =
-            (e.clientX - rect.left - 40)
-            + "px";
+    area.addEventListener("mousemove", (e) => {
+        const rect = area.getBoundingClientRect();
+        basket.style.left = (e.clientX - rect.left - 40) + "px";
     });
 
-    const spawn = setInterval(()=>{
-
-        const heart =
-            document.createElement("div");
-
+    const spawn = setInterval(() => {
+        const heart = document.createElement("div");
         heart.className = "heart";
         heart.innerHTML = "❤️";
 
-        let x =
-            Math.random()
-            *
-            (area.clientWidth - 50);
-
+        let x = Math.random() * (area.clientWidth - 50);
         let y = -20;
 
         heart.style.left = x + "px";
@@ -509,249 +316,171 @@ function startMemory() {
 
         area.appendChild(heart);
 
-        const fall = setInterval(()=>{
-
+        const fall = setInterval(() => {
             y += 5;
+            heart.style.top = y + "px";
 
-            heart.style.top =
-                y + "px";
+            const basketX = basket.offsetLeft;
 
-            const basketX =
-                basket.offsetLeft;
-
-            if(
-                y > area.clientHeight - 120 &&
-                Math.abs(x - basketX) < 60
-            ){
-
+            if (y > area.clientHeight - 120 && Math.abs(x - basketX) < 60) {
                 score++;
-
-                scoreText.textContent =
-                `${score} / 10 ❤️`;
+                scoreText.textContent = `${score} / 10 ❤️`;
 
                 clearInterval(fall);
                 heart.remove();
 
                 if (score >= 10) {
-                    clearInterval(spawn); 
+                    clearInterval(spawn);
                     clearInterval(timer);
 
-                    if(!completed.hearts){
+                    if (!completed.hearts) {
                         completed.hearts = true;
                         addStar();
                     }
 
-    showStarModal("¡Atrapaste suficientes corazones! Tercera estrella obtenida ⭐", () => {
-        showHub();
-    });
-}
+                    showStarModal("¡Atrapaste suficientes corazones! Tercera estrella obtenida ⭐", () => {
+                        showHub();
+                    });
+                }
+            }
 
-            if(y > area.clientHeight){
-
+            if (y > area.clientHeight) {
                 clearInterval(fall);
                 heart.remove();
             }
+        }, 20);
+    }, 800);
 
-        },20);
-
-    },800);
-
-    const timer = setInterval(()=>{
-
+    const timer = setInterval(() => {
         time--;
+        timerText.textContent = time + "s";
 
-        timerText.textContent =
-            time + "s";
-
-        if(time <= 0){
-
+        if (time <= 0) {
             clearInterval(timer);
             clearInterval(spawn);
-
         }
+    }, 1000);
+}
 
-    },1000);
-}function startStarGame(){
+function startStarGame() {
+    const template = document.getElementById("starTemplate");
+    app.innerHTML = template.innerHTML;
 
-    const template =
-        document.getElementById("starTemplate");
+    document.getElementById("starBack").onclick = showHub;
 
-    app.innerHTML =
-        template.innerHTML;
-
-    document
-        .getElementById("starBack")
-        .onclick = showHub;
-
-    const star =
-        document.getElementById("bouncingStar");
+    const star = document.getElementById("bouncingStar");
 
     let y = 200;
     let velocity = 0;
+    star.style.top = y + "px";
 
-    star.style.top =
-        y + "px";
+    const bounce = () => { velocity = -7; };
 
-    document.addEventListener("click", () => {
+    const handleKey = (e) => {
+        if (e.code === "Space") {
+            e.preventDefault();
+            bounce();
+        }
+    };
 
-    velocity = -7;
+    document.addEventListener("click", bounce);
+    document.addEventListener("keydown", handleKey);
 
-});
-
-document.addEventListener("keydown", (e) => {
-
-       if (e.code === "Space") {
-
-        e.preventDefault();
-
-        velocity = -7;
-    }
-
-});
-
-    const physics = setInterval(()=>{
-
+    const physics = setInterval(() => {
         velocity += 0.18;
         y += velocity;
+        star.style.top = y + "px";
 
-        star.style.top =
-            y + "px";
-
-        if(y > 430){
-
+        if (y > 430) {
             clearInterval(physics);
             clearInterval(countdown);
-
+            document.removeEventListener("click", bounce);
+            document.removeEventListener("keydown", handleKey);
             alert("La estrella cayó.");
         }
-
-    },20);
+    }, 20);
 
     let time = 20;
 
-    const countdown = setInterval(()=>{
-
+    const countdown = setInterval(() => {
         time--;
+        const timerEl = document.getElementById("starCountdown");
+        if (timerEl) timerEl.textContent = time;
 
-        document
-        .getElementById("starCountdown")
-        .textContent = time;
+        if (time <= 0) {
+            clearInterval(physics);
+            clearInterval(countdown);
+            document.removeEventListener("click", bounce);
+            document.removeEventListener("keydown", handleKey);
 
-
-            if (time <= 0) {
-    clearInterval(physics);
-    clearInterval(countdown);
-    
-    if (!completed.star) {
-        completed.star = true;
-        addStar();
-  }
-    showStarModal("¡Increíble balance! Mantuviste la estrella a salvo. Cuarta estrella obtenida ⭐", () => {
-        showHub();
-    });
+            if (!completed.star) {
+                completed.star = true;
+                addStar();
+            }
+            showStarModal("¡Increíble balance! Mantuviste la estrella a salvo. Cuarta estrella obtenida ⭐", () => {
+                showHub();
+            });
+        }
+    }, 1000);
 }
 
-    },1000);
-}function startPuzzle(){
+function startPuzzle() {
+    const template = document.getElementById("puzzleTemplate");
+    app.innerHTML = template.innerHTML;
 
-    const template =
-        document.getElementById("puzzleTemplate");
+    document.getElementById("puzzleBack").onclick = showHub;
 
-    app.innerHTML =
-        template.innerHTML;
+    const board = document.getElementById("puzzleBoard");
+    const pieces = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-    document
-        .getElementById("puzzleBack")
-        .onclick = showHub;
-
-    const board =
-        document.getElementById("puzzleBoard");
-
-    const pieces = [];
-
-    for(let i=0;i<9;i++){
-
-        pieces.push(i);
-    }
-
-    pieces.sort(() =>
-        Math.random() - 0.5);
+    pieces.sort(() => Math.random() - 0.5);
 
     let selected = null;
-
     render();
 
-    function render(){
-
+    function render() {
         board.innerHTML = "";
 
-        pieces.forEach((piece,index)=>{
+        pieces.forEach((piece, index) => {
+            const div = document.createElement("div");
+            div.className = "puzzle-piece";
 
-            const div =
-                document.createElement("div");
+            const row = Math.floor(piece / 3);
+            const col = piece % 3;
 
-            div.className =
-                "puzzle-piece";
+            div.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
 
-            const row =
-                Math.floor(piece/3);
-
-            const col =
-                piece%3;
-
-            div.style.backgroundPosition =
-                `${col*50}% ${row*50}%`;
-
-            div.onclick = ()=>{
-
-                if(selected === null){
-
+            div.onclick = () => {
+                if (selected === null) {
                     selected = index;
-                    div.style.outline =
-                    "4px solid gold";
-
+                    div.style.outline = "4px solid gold";
                     return;
                 }
 
-                [pieces[selected],pieces[index]]
-                =
-                [pieces[index],pieces[selected]];
-
+                [pieces[selected], pieces[index]] = [pieces[index], pieces[selected]];
                 selected = null;
 
                 render();
-
                 checkVictory();
             };
 
             board.appendChild(div);
-
         });
     }
 
-    function checkVictory(){
-
+    function checkVictory() {
         let correct = true;
-
-        for(let i=0;i<9;i++){
-
-            if(pieces[i] !== i){
-
+        for (let i = 0; i < 9; i++) {
+            if (pieces[i] !== i) {
                 correct = false;
                 break;
             }
         }
 
-console.log(pieces);
+        if (correct) {
+            document.getElementById("puzzleMessage").innerHTML = "⭐ Has recuperado todos los recuerdos.";
 
-       if(correct){
-
-    document
-        .getElementById("puzzleMessage")
-        .innerHTML =
-        "⭐ Has recuperado todos los recuerdos.";
-
-    if (!completed.puzzle) {
+            if (!completed.puzzle) {
                 completed.puzzle = true;
                 addStar();
             }
@@ -760,19 +489,14 @@ console.log(pieces);
                 showHub();
             });
         }
-    } 
-} 
+    }
+}
 
-function showFinal(){
+function showFinal() {
+    const template = document.getElementById("finalTemplate");
+    app.innerHTML = template.innerHTML;
 
-    const template =
-        document.getElementById("finalTemplate");
-
-    app.innerHTML =
-        template.innerHTML;
-
-    const poemContainer =
-        document.getElementById("poemContainer");
+    const poemContainer = document.getElementById("poemContainer");
 
     const poem = `
 Llegaste hasta aquí.
@@ -816,27 +540,12 @@ en cada versión de nuestra historia.
 
     let index = 0;
 
-    const writer = setInterval(()=>{
-
-        poemContainer.textContent =
-            poem.slice(0,index);
-
+    const writer = setInterval(() => {
+        poemContainer.textContent = poem.slice(0, index);
         index++;
 
-    const modal = document.getElementById("starModal");
-    const msg = document.getElementById("modalMessage");
-    const btn = document.getElementById("modalCloseBtn");
-
-    if (!modal) return;
-
-    msg.innerHTML = textoMensaje;
-    modal.classList.remove("hidden");
-
-    const cerrar = () => {
-        modal.classList.add("hidden");
-        btn.removeEventListener("click", cerrar);
-        if (alCerrar) alCerrar();
-    };
-
-    btn.addEventListener("click", cerrar);
+        if (index > poem.length) {
+            clearInterval(writer);
+        }
+    }, 50);
 }
