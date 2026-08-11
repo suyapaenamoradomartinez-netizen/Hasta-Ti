@@ -768,4 +768,77 @@ button:active{
         height:55px;
     }
 
+}#petalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0; /* Mantiene los pétalos al fondo */
+}
+
+.petal {
+    position: absolute;
+    background: linear-gradient(135deg, #FFD1DF 0%, #E5A6BC 100%);
+    border-radius: 15% 85% 15% 85% / 15% 85% 15% 85%;
+    opacity: 0.7;
+    transform-origin: left top;
+    animation: fall linear infinite, sway ease-in-out infinite;
+}
+
+@keyframes fall {
+    0% { top: -10%; }
+    100% { top: 110%; }
+}
+
+@keyframes sway {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    50% { transform: rotate(180deg) translateX(30px); }
+}.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(92, 58, 33, 0.35); /* Fondo tenue */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: #FFF5F7;
+    padding: 30px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(229, 166, 188, 0.4);
+    max-width: 380px;
+    width: 85%;
+    border: 3px solid #E5A6BC;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-star {
+    font-size: 50px;
+    margin-bottom: 12px;
+}
+
+#modalMessage {
+    color: #5C3A21;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
