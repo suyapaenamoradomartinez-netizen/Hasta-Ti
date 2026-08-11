@@ -482,15 +482,20 @@ function startPuzzle() {
 
             if (!completed.puzzle) {
                 completed.puzzle = true;
-                addStar();
+                stars++; 
+                updateStars();
             }
 
-            showStarModal("¡El rompecabezas está completo! Has conseguido la estrella ⭐", () => {
-                showHub();
+            
+            showStarModal("¡El rompecabezas está completo! Has conseguido la última estrella ⭐", () => {
+        
+                crearLluviaDeCorazones();
+                
+                setTimeout(() => {
+                    showFinal();
+                }, 2500);
             });
         }
-    }
-}
 
 function showFinal() {
     const template = document.getElementById("finalTemplate");
@@ -548,4 +553,30 @@ en cada versión de nuestra historia.
             clearInterval(writer);
         }
     }, 50);
+}
+function crearLluviaDeCorazones() {
+    for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "💖";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.top = "-20px";
+            heart.style.position = "fixed";
+            heart.style.zIndex = "3000";
+            heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+            heart.style.transition = "transform 2s linear, opacity 2s ease-out";
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.transform = `translateY(${window.innerHeight + 50}px) rotate(${Math.random() * 360}deg)`;
+                heart.style.opacity = "0";
+            }, 50);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 2100);
+        }, i * 80);
+    }
 }
