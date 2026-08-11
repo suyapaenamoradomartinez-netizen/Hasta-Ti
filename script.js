@@ -18,17 +18,18 @@ const completed = {
 ===================== */
 
 function createPetal() {
+    if (!petalContainer) return;
 
-    const petal = document.createElement("img");
-
-    petal.src = "assets/petal.png";
+    const petal = document.createElement("div");
     petal.classList.add("petal");
 
-    petal.style.left =
-        Math.random() * 100 + "%";
+    
+    const size = Math.random() * 8 + 8; 
+    petal.style.width = `${size}px`;
+    petal.style.height = `${size * 1.3}px`;
 
-    petal.style.animationDuration =
-        (6 + Math.random() * 6) + "s";
+    petal.style.left = Math.random() * 100 + "vw";
+    petal.style.animationDuration = (7 + Math.random() * 5) + "s, " + (2 + Math.random() * 2) + "s";
 
     petalContainer.appendChild(petal);
 
@@ -37,7 +38,7 @@ function createPetal() {
     }, 12000);
 }
 
-setInterval(createPetal, 500);
+setInterval(createPetal, 400);
 
 /* =====================
    MUSICA
@@ -532,24 +533,18 @@ function startMemory() {
                 heart.remove();
 
                 if (score >= 10) {
+                    clearInterval(spawn); 
+                    clearInterval(timer);
 
-    clearInterval(spawn); 
-    clearInterval(timer);
+                    if(!completed.hearts){
+                        completed.hearts = true;
+                        addStar();
+                    }
 
     showStarModal("¡Atrapaste suficientes corazones! Tercera estrella obtenida ⭐", () => {
         showHub();
     });
 }
-
-                    if(!completed.hearts){
-
-                        completed.hearts = true;
-                        addStar();
-                    }
-
-                    alert("⭐ Estrella obtenida");
-                }
-            }
 
             if(y > area.clientHeight){
 
@@ -646,7 +641,11 @@ document.addEventListener("keydown", (e) => {
             if (time <= 0) {
     clearInterval(physics);
     clearInterval(countdown);
-
+    
+    if (!completed.star) {
+        completed.star = true;
+        addStar();
+  }
     showStarModal("¡Increíble balance! Mantuviste la estrella a salvo. Cuarta estrella obtenida ⭐", () => {
         showHub();
     });
@@ -824,33 +823,6 @@ en cada versión de nuestra historia.
 
         index++;
 
-        if(index > poem.length){
-
-            clearInterval(writer);
-        }
-
-    },40);
-}function createPetal() {
-    const container = document.getElementById("petalContainer");
-    if (!container) return;
-
-    const petal = document.createElement("div");
-    petal.classList.add("petal");
-
-    // Tamaño pequeño acotado
-    const size = Math.random() * 8 + 8; // Entre 8px y 16px
-    petal.style.width = `${size}px`;
-    petal.style.height = `${size * 1.3}px`;
-
-    petal.style.left = Math.random() * 100 + "vw";
-    petal.style.animationDuration = (7 + Math.random() * 5) + "s, " + (2 + Math.random() * 2) + "s";
-
-    container.appendChild(petal);
-
-    setTimeout(() => { petal.remove(); }, 12000);
-}
-
-setInterval(createPetal, 400);function showStarModal(textoMensaje, alCerrar) {
     const modal = document.getElementById("starModal");
     const msg = document.getElementById("modalMessage");
     const btn = document.getElementById("modalCloseBtn");
