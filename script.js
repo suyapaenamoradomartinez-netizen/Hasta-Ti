@@ -407,38 +407,23 @@ function startMemory() {
             updateDisplay();
         };
 
-    document
-        .getElementById("submitCode")
-        .onclick = () => {
-
-            if (currentCode === "28012025") {
-    showStarModal("¡Código correcto! Esa fecha lo cambió todo. Segunda estrella obtenida ⭐", () => {
-        showHub();
-    });
-} else {
-    // Este lo puedes dejar como un texto en pantalla o usar el modal sin estrella cambiando el texto
-    document.getElementById("codeMessage").textContent = "Código incorrecto. ¡Piensa en una fecha clave!";
-}
-
-                if(!completed.code){
-
-                    completed.code = true;
-                    addStar();
-                }
-
-            } else {
-
-                message.innerHTML =
-                `
-                No es ese.
-
-                <br><br>
-
-                Hay una fecha que deberías recordar.
-                `;
+   document.getElementById("submitCode").onclick = () => {
+        if (currentCode === "28012025") {
+           
+            if (!completed.code) {
+                completed.code = true;
+                addStar();
             }
-        };
+          
+            showStarModal("¡Código correcto! Esa fecha lo cambió todo. Segunda estrella obtenida ⭐", () => {
+                showHub();
+            });
+        } else {
 
+            document.getElementById("codeMessage").textContent = "Código incorrecto. ¡Piensa en una fecha clave!";
+        }
+    }; 
+   
     function updateDisplay(){
 
         let txt = currentCode;
@@ -547,7 +532,7 @@ function startMemory() {
                 heart.remove();
 
                 if (score >= 10) {
-    // IMPORTANTE: Limpia tus intervalos/timers antes de lanzar el modal para que el juego se detenga
+
     clearInterval(spawn); 
     clearInterval(timer);
 
@@ -762,18 +747,22 @@ console.log(pieces);
 
        if(correct){
 
-    console.log("PUZZLE COMPLETADO");
-
     document
         .getElementById("puzzleMessage")
         .innerHTML =
         "⭐ Has recuperado todos los recuerdos.";
 
-    if (pieces.every((p, i) => p === i)) {
-    showStarModal("¡El rompecabezas está completo! Has conseguido la última estrella ⭐", () => {
-        showFinal(); // Te manda directo a tu pantalla o poema final
-    });
-}
+    if (!completed.puzzle) {
+                completed.puzzle = true;
+                addStar();
+            }
+
+            showStarModal("¡El rompecabezas está completo! Has conseguido la estrella ⭐", () => {
+                showHub();
+            });
+        }
+    } 
+} 
 
 function showFinal(){
 
