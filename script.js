@@ -333,13 +333,11 @@ function startMemory() {
                             message.innerHTML =
                                 phrases[icon];
 
-                            if (
-                                matches === 6
-                            ) {
-
-                                message.innerHTML =
-                                    "⭐ <strong>Memoria completada.</strong><br><br>Pero todavía quedan cosas por recordar...";
-
+                            if (matches === 6) {
+    showStarModal("¡Completaste el juego de memoria y desbloqueaste la primera estrella! ⭐", () => {
+        showHub();
+    });
+}
                                 if (
                                     !completed.memory
                                 ) {
@@ -413,24 +411,14 @@ function startMemory() {
         .getElementById("submitCode")
         .onclick = () => {
 
-            if(currentCode === "28012025"){
-
-                message.innerHTML =
-                `
-                ⭐ Estrella obtenida
-
-                <br><br>
-
-                Código correcto.
-
-                <br><br>
-
-                28 de enero de 2025.
-
-                <br><br>
-
-                El día en que comenzó nuestra historia.
-                `;
+            if (currentCode === "28012025") {
+    showStarModal("¡Código correcto! Esa fecha lo cambió todo. Segunda estrella obtenida ⭐", () => {
+        showHub();
+    });
+} else {
+    // Este lo puedes dejar como un texto en pantalla o usar el modal sin estrella cambiando el texto
+    document.getElementById("codeMessage").textContent = "Código incorrecto. ¡Piensa en una fecha clave!";
+}
 
                 if(!completed.code){
 
@@ -558,10 +546,15 @@ function startMemory() {
                 clearInterval(fall);
                 heart.remove();
 
-                if(score >= 10){
+                if (score >= 10) {
+    // IMPORTANTE: Limpia tus intervalos/timers antes de lanzar el modal para que el juego se detenga
+    clearInterval(spawn); 
+    clearInterval(timer);
 
-                    clearInterval(spawn);
-                    clearInterval(timer);
+    showStarModal("¡Atrapaste suficientes corazones! Tercera estrella obtenida ⭐", () => {
+        showHub();
+    });
+}
 
                     if(!completed.hearts){
 
@@ -664,19 +657,15 @@ document.addEventListener("keydown", (e) => {
         .getElementById("starCountdown")
         .textContent = time;
 
-        if(time <= 0){
 
-            clearInterval(countdown);
-            clearInterval(physics);
+            if (time <= 0) {
+    clearInterval(physics);
+    clearInterval(countdown);
 
-            if(!completed.star){
-
-                completed.star = true;
-                addStar();
-            }
-
-            alert("⭐ Estrella obtenida");
-        }
+    showStarModal("¡Increíble balance! Mantuviste la estrella a salvo. Cuarta estrella obtenida ⭐", () => {
+        showHub();
+    });
+}
 
     },1000);
 }function startPuzzle(){
@@ -780,16 +769,10 @@ console.log(pieces);
         .innerHTML =
         "⭐ Has recuperado todos los recuerdos.";
 
-    if(!completed.puzzle){
-
-        console.log("AGREGANDO ESTRELLA");
-
-        completed.puzzle = true;
-
-         addStar();
-       }
-     }
-  }
+    if (pieces.every((p, i) => p === i)) {
+    showStarModal("¡El rompecabezas está completo! Has conseguido la última estrella ⭐", () => {
+        showFinal(); // Te manda directo a tu pantalla o poema final
+    });
 }
 
 function showFinal(){
@@ -858,4 +841,41 @@ en cada versión de nuestra historia.
         }
 
     },40);
+}function createPetal() {
+    const container = document.getElementById("petalContainer");
+    if (!container) return;
+
+    const petal = document.createElement("div");
+    petal.classList.add("petal");
+
+    // Tamaño pequeño acotado
+    const size = Math.random() * 8 + 8; // Entre 8px y 16px
+    petal.style.width = `${size}px`;
+    petal.style.height = `${size * 1.3}px`;
+
+    petal.style.left = Math.random() * 100 + "vw";
+    petal.style.animationDuration = (7 + Math.random() * 5) + "s, " + (2 + Math.random() * 2) + "s";
+
+    container.appendChild(petal);
+
+    setTimeout(() => { petal.remove(); }, 12000);
+}
+
+setInterval(createPetal, 400);function showStarModal(textoMensaje, alCerrar) {
+    const modal = document.getElementById("starModal");
+    const msg = document.getElementById("modalMessage");
+    const btn = document.getElementById("modalCloseBtn");
+
+    if (!modal) return;
+
+    msg.innerHTML = textoMensaje;
+    modal.classList.remove("hidden");
+
+    const cerrar = () => {
+        modal.classList.add("hidden");
+        btn.removeEventListener("click", cerrar);
+        if (alCerrar) alCerrar();
+    };
+
+    btn.addEventListener("click", cerrar);
 }
