@@ -146,12 +146,6 @@ function addStar() {
     if (stars > 5) stars = 5;
 
     updateStars();
-
-    if (stars >= 5) {
-        setTimeout(() => {
-            showFinal();
-        }, 1000);
-    }
 }
 
 function startMemory() {
@@ -482,18 +476,14 @@ function startPuzzle() {
 
             if (!completed.puzzle) {
                 completed.puzzle = true;
-                stars++; 
-                updateStars();
+                addstar();
             }
 
             
             showStarModal("¡El rompecabezas está completo! Has conseguido la última estrella ⭐", () => {
-        
+                showFinal();
                 crearLluviaDeCorazones();
-                
-                setTimeout(() => {
-                    showFinal();
-                }, 2500);
+               
             });
         }
 
