@@ -1,0 +1,365 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hasta Ti ❤️</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- Música -->
+    <audio id="bgMusic" loop>
+        assets/music.mp3
+    </audio>
+
+    <!-- Pétalos -->
+    <div id="petalContainer"></div>
+
+    <!-- Botón Música -->
+    <button id="musicToggle" class="music-btn">
+        🔊 Música
+    </button>
+
+    <!-- Contenido principal -->
+    <main id="app">
+
+        <!-- Pantalla inicial -->
+
+        <section id="introScreen" class="card">
+
+            <h1 id="introQuestion">
+                ¿Quieres entrar? 💌
+            </h1>
+
+            <p class="subtitle">
+                Hay algo especial esperándote...
+            </p>
+
+            <div class="button-row">
+
+                <button id="yesBtn" class="primary-btn">
+                    Sí ❤️
+                </button>
+
+                <button id="noBtn" class="secondary-btn">
+                    No
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+
+
+    <!-- HUB -->
+
+    <template id="hubTemplate">
+
+        <section class="card">
+
+            <h1>
+                ✨ Recupera los Recuerdos ✨
+            </h1>
+
+            <p class="subtitle">
+                Consigue las cinco estrellas para desbloquear el último recuerdo.
+            </p>
+
+            <div class="star-bar">
+
+                <span id="star1">☆</span>
+                <span id="star2">☆</span>
+                <span id="star3">☆</span>
+                <span id="star4">☆</span>
+                <span id="star5">☆</span>
+
+            </div>
+
+            <div class="level-grid">
+
+                <button class="level-btn" id="memoryBtn">
+                    🎮 Nivel 1
+                    <br>
+                    Memoria
+                </button>
+
+                <button class="level-btn" id="codeBtn">
+                    🔐 Nivel 2
+                    <br>
+                    El Código
+                </button>
+
+                <button class="level-btn" id="heartsBtn">
+                    ❤️ Nivel 3
+                    <br>
+                    Atrapa Corazones
+                </button>
+
+                <button class="level-btn" id="starBtn">
+                    ⭐ Nivel 4
+                    <br>
+                    No Dejes Caer la Estrella
+                </button>
+
+                <button class="level-btn" id="puzzleBtn">
+                    💌 Nivel 5
+                    <br>
+                    El Último Recuerdo
+                </button>
+
+            </div>
+
+        </section>
+
+    </template>
+
+
+
+
+
+    <!-- NIVEL 1 MEMORIA -->
+
+    <template id="memoryTemplate">
+
+        <section class="card game-card">
+
+            <h1>
+                🎮 Nivel 1: Memoria
+            </h1>
+
+            <p>
+                Encuentra todas las parejas.
+            </p>
+
+            <div id="memoryBoard" class="memory-board"></div>
+
+            <div id="memoryMessage" class="message-box"></div>
+
+            <button id="memoryBack" class="back-btn">
+                Volver
+            </button>
+
+        </section>
+
+    </template>
+
+
+
+
+
+    <!-- NIVEL 2 CODIGO -->
+
+    <template id="codeTemplate">
+
+        <section class="card game-card">
+
+            <h1>
+                🔐 Nivel 2: El Código
+            </h1>
+
+            <p>
+                Hay una fecha que deberías recordar.
+            </p>
+
+            <div class="safe-screen">
+
+                <div id="codeDisplay">
+                    __ / __ / ____
+                </div>
+
+            </div>
+
+            <div class="number-pad">
+
+                <button data-key="1">1</button>
+                <button data-key="2">2</button>
+                <button data-key="3">3</button>
+
+                <button data-key="4">4</button>
+                <button data-key="5">5</button>
+                <button data-key="6">6</button>
+
+                <button data-key="7">7</button>
+                <button data-key="8">8</button>
+                <button data-key="9">9</button>
+
+                <button id="clearCode">
+                    C
+                </button>
+
+                <button data-key="0">
+                    0
+                </button>
+
+                <button id="submitCode">
+                    ✓
+                </button>
+
+            </div>
+
+            <div id="codeMessage" class="message-box"></div>
+
+            <button id="codeBack" class="back-btn">
+                Volver
+            </button>
+
+        </section>
+
+    </template>
+
+
+
+
+
+    <!-- NIVEL 3 CORAZONES -->
+
+    <template id="heartsTemplate">
+
+        <section class="card game-card">
+
+            <h1>
+                ❤️ Nivel 3
+            </h1>
+
+            <p>
+                Atrapa 10 corazones antes de que se acabe el tiempo.
+            </p>
+
+            <div class="game-info">
+
+                <span id="heartScore">
+                    0 / 10 ❤️
+                </span>
+
+                <span id="heartTimer">
+                    30s
+                </span>
+
+            </div>
+
+            <div id="heartGameArea"></div>
+
+            <button id="heartsBack" class="back-btn">
+                Volver
+            </button>
+
+        </section>
+
+    </template>
+
+
+
+
+
+    <!-- NIVEL 4 ESTRELLA -->
+
+    <template id="starTemplate">
+
+        <section class="card game-card">
+
+            <h1>
+                ⭐ Nivel 4
+            </h1>
+
+            <p>
+                No dejes caer la estrella.
+            </p>
+
+            <div id="starCountdown">
+                20
+            </div>
+
+            <div id="starGameArea">
+
+                <div id="bouncingStar">
+                    ⭐
+                </div>
+
+            </div>
+
+            <button id="starBack" class="back-btn">
+                Volver
+            </button>
+
+        </section>
+
+    </template>
+
+
+
+
+
+    <!-- NIVEL 5 PUZZLE -->
+
+    <template id="puzzleTemplate">
+
+        <section class="card game-card">
+
+            <h1>
+                💌 Nivel 5
+            </h1>
+
+            <p>
+                El Último Recuerdo
+            </p>
+
+            <div id="puzzleBoard"></div>
+
+            <div id="puzzleMessage" class="message-box"></div>
+
+            <button id="puzzleBack" class="back-btn">
+                Volver
+            </button>
+
+        </section>
+
+    </template>
+
+
+
+
+
+    <!-- FINAL -->
+
+    <template id="finalTemplate">
+
+        <section class="final-screen">
+
+            <h1 class="final-title">
+                🌙 Hasta Ti
+            </h1>
+
+            <div class="bouquet-container">
+
+                assets/bouquet.png
+
+            </div>
+
+            <div
+                id="poemContainer"
+                class="poem-box"
+            ></div>
+
+        </section>
+
+    </template>
+
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
