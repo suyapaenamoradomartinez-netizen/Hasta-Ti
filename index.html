@@ -12,9 +12,15 @@
     <link rel="stylesheet" href="style.css">
 
 </head>
-
+<div id="petalContainer"></div>
 <body>
-
+<div id="starModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-star">⭐</div>
+        <p id="modalMessage"></p>
+        <button id="modalCloseBtn" class="btn">¡Genial!</button>
+    </div>
+</div>
     <!-- Música -->
     <audio id="bgMusic" loop>
         assets/music.mp3
