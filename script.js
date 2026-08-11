@@ -476,17 +476,17 @@ function startPuzzle() {
 
             if (!completed.puzzle) {
                 completed.puzzle = true;
-                addstar();
+                addStar();
             }
 
             
             showStarModal("¡El rompecabezas está completo! Has conseguido la última estrella ⭐", () => {
                 showFinal();
                 crearLluviaDeCorazones();
-               
-            });
+               });
+            }
         }
-
+    }
 function showFinal() {
     const template = document.getElementById("finalTemplate");
     app.innerHTML = template.innerHTML;
