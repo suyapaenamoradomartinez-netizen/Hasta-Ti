@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", () => {
 const app = document.getElementById("app");
 const music = document.getElementById("bgMusic");
 const musicToggle = document.getElementById("musicToggle");
@@ -570,3 +571,4 @@ function crearLluviaDeCorazones() {
         }, i * 80);
     }
 }
+});
